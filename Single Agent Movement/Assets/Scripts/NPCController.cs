@@ -32,6 +32,7 @@ public class NPCController : MonoBehaviour {
         line = GetComponent<LineRenderer>();
         position = rb.position;
         orientation = transform.eulerAngles.y;
+        maxSpeed = 100;
     }
 
     /// <summary>
@@ -40,11 +41,21 @@ public class NPCController : MonoBehaviour {
     /// </summary>
     void FixedUpdate() {
         switch (mapState) {
+            case 0:
+                linear = ai.Seek();
+                if (label)
+                {
+                    // replace "First algorithm" with the name of the actual algorithm you're demoing
+                    // do this for each phase
+                    label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Seek algorithm";
+                }
+                break;
             case 1:
+                linear = ai.Flee();
                 if (label) {
                     // replace "First algorithm" with the name of the actual algorithm you're demoing
                     // do this for each phase
-                    label.text = name.Replace("(Clone)","") + "\nAlgorithm: First algorithm"; 
+                    label.text = name.Replace("(Clone)","") + "\nAlgorithm: Flee algorithm"; 
                 }
                 // linear = ai.Pursue();   // For example
                 // angular = ai.Face();    // For example
@@ -54,8 +65,9 @@ public class NPCController : MonoBehaviour {
                 break;
 
             case 2:
+                linear = ai.Arrive();
                 if (label) {
-                    label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Second algorithm";
+                    label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Arrive algorithm";
                 }
 
                 // linear = ai.whatever();  -- replace with the desired calls
@@ -63,8 +75,9 @@ public class NPCController : MonoBehaviour {
                 break;
 
             case 3:
+                linear = ai.Persue();
                 if (label) {
-                    label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Third algorithm";
+                    label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Persue algorithm";
                 }
 
                 // linear = ai.whatever();  -- replace with the desired calls
@@ -72,8 +85,9 @@ public class NPCController : MonoBehaviour {
                 break;
 
             case 4:
+                linear = ai.Evade();
                 if (label) {
-                    label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Fourth algorithm";
+                    label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Evade algorithm";
                 }
 
                 // linear = ai.whatever();  -- replace with the desired calls
@@ -94,6 +108,7 @@ public class NPCController : MonoBehaviour {
         if (label) {
             label.transform.position = Camera.main.WorldToScreenPoint(this.transform.position);
         }
+        
     }
 
     /// <summary>

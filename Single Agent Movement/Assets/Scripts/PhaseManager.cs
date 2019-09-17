@@ -58,10 +58,11 @@ public class PhaseManager : MonoBehaviour {
     void Start() {
         narrator.text = "This is the place to mention major things going on during the demo, the \"narration.\"";
         spawnedNPCs = new List<GameObject>();
-        spawnedNPCs.Add(SpawnItem(spawner1, HunterPrefab, null, SpawnText1, 4));
+        EnterMapStateZero();
+        //spawnedNPCs.Add(SpawnItem(spawner1, HunterPrefab, null, SpawnText1, 4));
 
-        Invoke("SpawnWolf", 12);
-        Invoke("Meeting1", 30);
+        //Invoke("SpawnWolf", 12);
+        //Invoke("Meeting1", 30);
     }
 
     /// <summary>
@@ -117,28 +118,56 @@ public class PhaseManager : MonoBehaviour {
 
     private void EnterMapStateZero()
     {
-        narrator.text = "In MapState Zero, we're going to ...";
+        for (int i = 0; i < spawnedNPCs.Count; i++)
+        {
+            Destroy(spawnedNPCs[i]);
+        }
 
-        //currentMapState = 2; // or whatever. Won't necessarily advance the phase every time
+        narrator.text = "Attempting Seek Algorithm";
+
+        GameObject wolf = SpawnItem(spawner1, WolfPrefab, null, SpawnText2, 0);
+        spawnedNPCs.Add(wolf);
+        spawnedNPCs.Add(SpawnItem(spawner2, HunterPrefab, wolf.GetComponent<NPCController>(), SpawnText1, 0));
+
+        previousMapState = 0;
 
         //spawnedNPCs.Add(SpawnItem(spawner2, WolfPrefab, null, SpawnText2, 4));
     }
 
     private void EnterMapStateOne() {
-        narrator.text = "In MapState One, we're going to ...";
+        narrator.text = "Attempting Flee Algorithm";
 
-        //currentMapState = 2; // or whatever. Won't necessarily advance the phase every time
+        for (int i = 0; i < spawnedNPCs.Count; i++)
+        {
+            Destroy(spawnedNPCs[i]);
+        }
 
-        //spawnedNPCs.Add(SpawnItem(spawner2, WolfPrefab, null, SpawnText2, 4));
+        GameObject wolf = SpawnItem(spawner2, WolfPrefab, null, SpawnText2, 1);
+        GameObject hunter = SpawnItem(spawner3, HunterPrefab, wolf.GetComponent<NPCController>(), SpawnText1, 0);
+        wolf.GetComponent<SteeringBehavior>().target = hunter.GetComponent<NPCController>();
+        spawnedNPCs.Add(wolf);
+        spawnedNPCs.Add(hunter);
+
+        previousMapState = 1;
     }
 
     private void EnterMapStateTwo()
     {
-        narrator.text = "Entering MapState Two";
+        narrator.text = "Attempting Persue and Arrive ";
 
-        //currentMapState = 3; // or whatever. Won't necessarily advance the phase every time
+        for (int i = 0; i < spawnedNPCs.Count; i++)
+        {
+            Destroy(spawnedNPCs[i]);
+        }
 
-        //spawnedNPCs.Add(SpawnItem(spawner2, WolfPrefab, null, SpawnText2, 4));
+        GameObject wolf = SpawnItem(spawner2, WolfPrefab, null, SpawnText2, 0);
+        GameObject hunter = SpawnItem(spawner3, HunterPrefab, wolf.GetComponent<NPCController>(), SpawnText1, 2);
+        //wolf.GetComponent<SteeringBehavior>().target = hunter.GetComponent<NPCController>();
+        spawnedNPCs.Add(wolf);
+        spawnedNPCs.Add(hunter);
+
+        previousMapState = 2;
+
     }
     private void EnterMapStateThree()
     {

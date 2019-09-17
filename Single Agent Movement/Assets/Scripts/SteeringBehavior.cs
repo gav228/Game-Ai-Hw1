@@ -44,7 +44,39 @@ public class SteeringBehavior : MonoBehaviour {
 
     protected void Start() {
         agent = GetComponent<NPCController>();
+        timeToTarget = 3;
         //wanderOrientation = agent.orientation;
     }
 
+    public Vector3 Seek()
+    {
+        return target.position - agent.position;
+    }
+
+    public Vector3 Flee()
+    {
+        return agent.position - target.position;
+    }
+
+    public Vector3 Arrive()
+    {
+        if (target.position[0] - agent.position[0] < 1 && target.position[2] - agent.position[2] < 1)
+        {
+            agent.velocity = new Vector3(0,0,0);
+            return new Vector3(0, 0, 0);
+        }
+        return (target.position - agent.position) / timeToTarget;
+    }
+
+    public Vector3 Persue()
+    {
+        return target.position;
+    }
+
+    public Vector3 Evade()
+    {
+        return agent.position;
+    }
+
+    
 }
