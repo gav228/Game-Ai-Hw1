@@ -114,6 +114,9 @@ public class PhaseManager : MonoBehaviour {
            case 4:
                EnterMapStateFour();
                break;
+            case 5:
+                EnterMapStateFive();
+                break;
 
             // ADD MORE CASES AS NEEDED
        }
@@ -179,7 +182,7 @@ public class PhaseManager : MonoBehaviour {
 
     private void EnterMapStateTwo()
     {
-        narrator.text = "Attempting Persue and Arrive ";
+        narrator.text = "Attempting Pursue and Arrive ";
 
         for (int i = 0; i < spawnedNPCs.Count; i++)
         {
@@ -254,10 +257,43 @@ public class PhaseManager : MonoBehaviour {
         Seeker1.GetComponent<SteeringBehavior>().target = Target.GetComponent<NPCController>();
         Seeker1.GetComponent<NPCController>().label = SpawnText1;
 
+        GameObject Seeker2 = Instantiate(HunterPrefab, new Vector3(-3, 1, 5), Quaternion.identity);
+        spawnedNPCs.Add(Seeker2);
+        Seeker2.GetComponent<NPCController>().mapState = 6;
+        Seeker2.GetComponent<SteeringBehavior>().target = Target.GetComponent<NPCController>();
+        Seeker2.GetComponent<NPCController>().label = SpawnText2;
 
         previousMapState = 4;
     }
+    private void EnterMapStateFive()
+    {
+        narrator.text = "Attempting Face";
 
+        for (int i = 0; i < spawnedNPCs.Count; i++)
+        {
+            Destroy(spawnedNPCs[i]);
+        }
+
+        GameObject Target = Instantiate(WolfPrefab, new Vector3(10, 1, 10), Quaternion.identity);
+        spawnedNPCs.Add(Target);
+        Target.GetComponent<NPCController>().mapState = 20;
+
+
+
+        GameObject Seeker1 = Instantiate(HunterPrefab, new Vector3(-10, 1, 10), Quaternion.identity);
+        spawnedNPCs.Add(Seeker1);
+        Seeker1.GetComponent<NPCController>().mapState = 7;
+        Seeker1.GetComponent<SteeringBehavior>().target = Target.GetComponent<NPCController>();
+        Seeker1.GetComponent<NPCController>().label = SpawnText1;
+
+        GameObject Seeker2 = Instantiate(HunterPrefab, new Vector3(-3, 1, 5), Quaternion.identity);
+        spawnedNPCs.Add(Seeker2);
+        Seeker2.GetComponent<NPCController>().mapState = 8;
+        Seeker2.GetComponent<SteeringBehavior>().target = Target.GetComponent<NPCController>();
+        Seeker2.GetComponent<NPCController>().label = SpawnText2;
+
+        previousMapState = 5;
+    }
 
     // ... Etc. Etc.
 

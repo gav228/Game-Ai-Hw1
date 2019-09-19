@@ -52,18 +52,18 @@ public class SteeringBehavior : MonoBehaviour {
 
     public float mapToRange(float rotation)
     {
-        rotation %= 360.0f;
-        if (Mathf.Abs(rotation) > 180.0f)
+        float rotationRad = rotation * Mathf.Deg2Rad;
+        /*if (rotationRad <= (-1 * Mathf.PI))
         {
-            if(rotation < 0.0f)
-            {
-                rotation += 360.0f;
-            } else
-            {
-                rotation -= 360.0f;
-            }
+            rotationRad += 2 * Mathf.PI; //RotationRad is negative and we want it to be positive
         }
-        return rotation;
+        else if (rotationRad > Mathf.PI)
+        {
+            rotationRad += (-2 * Mathf.PI);
+        }*/
+
+        rotationRad = rotationRad - 2 * Mathf.PI * Mathf.Floor((rotationRad + Mathf.PI) / (2 * Mathf.PI));
+        return rotationRad;
     }
 
     public Vector3 Seek()
@@ -137,11 +137,33 @@ public class SteeringBehavior : MonoBehaviour {
 
         return agent.position - predicted_position;
     }
+    public float Face()
+    {
+        Vector3 Direction = target.position - agent.position;
+
+        if (Direction.magnitude == 0)
+        {
+            return 0f;
+        }
+        float newTargetOrientation = Vector3.Angle(Vector3.forward, Direction);
+
+        float rotation = newTargetOrientation - agent.transform.eulerAngles.y;
+
+
+        rotation = mapToRange(rotation);
+        float rotationSize = Mathf.Abs(rotation);
+
+        float targetRotation = maxRotation;
+        targetRotation *= rotation / rotationSize;
+
+        return targetRotation - agent.rotation;
+    }
 
     public float Align()
     {
-        
-        float rotation = target.orientation - agent.orientation;
+        float rotation = Vector3.Angle(Vector3.forward, target.position) - agent.transform.eulerAngles.y;
+        print(Vector3.Angle(Vector3.forward, target.position));
+
         rotation = mapToRange(rotation);
         float rotationSize = Mathf.Abs(rotation);
 

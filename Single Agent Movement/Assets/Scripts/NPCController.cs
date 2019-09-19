@@ -79,7 +79,7 @@ public class NPCController : MonoBehaviour {
             case 3:
                 linear = ai.Persue();
                 if (label) {
-                    label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Persue algorithm";
+                    label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Pursue algorithm";
                 }
 
                 // linear = ai.whatever();  -- replace with the desired calls
@@ -104,7 +104,29 @@ public class NPCController : MonoBehaviour {
                 // linear = ai.whatever();  -- replace with the desired calls
                 // angular = ai.whatever();
                 break;
-
+            case 6:
+                linear = ai.Arrive();
+                angular = ai.Align();
+                if (label)
+                {
+                    label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Align and Arrive";
+                }
+                break;
+            case 7:
+                angular = ai.Face();
+                if (label)
+                {
+                    label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Face";
+                }
+                break;
+            case 8:
+                angular = ai.Face();
+                linear = ai.Arrive();
+                if (label)
+                {
+                    label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Face and Arrive";
+                }
+                break;
             // ADD CASES AS NEEDED
             case 20:
                 return;
