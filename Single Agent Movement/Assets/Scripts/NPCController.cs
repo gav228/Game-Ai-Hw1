@@ -32,7 +32,9 @@ public class NPCController : MonoBehaviour {
         line = GetComponent<LineRenderer>();
         position = rb.position;
         orientation = transform.eulerAngles.y;
-        maxSpeed = 100;
+        maxSpeed = 7;
+        linear = new Vector3(0,0,0);
+        angular = 0;
     }
 
     /// <summary>
@@ -94,17 +96,21 @@ public class NPCController : MonoBehaviour {
                 // angular = ai.whatever();
                 break;
             case 5:
+                angular = ai.Align();
                 if (label) {
-                    label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Fifth algorithm";
+                    label.text = name.Replace("(Clone)", "") + "\nAlgorithm: Align algorithm";
                 }
 
                 // linear = ai.whatever();  -- replace with the desired calls
                 // angular = ai.whatever();
                 break;
 
-                // ADD CASES AS NEEDED
+            // ADD CASES AS NEEDED
+            case 20:
+                return;
         }
         UpdateMovement(linear, angular, Time.deltaTime);
+        DrawCircle(linear, 1);
         if (label) {
             label.transform.position = Camera.main.WorldToScreenPoint(this.transform.position);
         }
@@ -167,7 +173,7 @@ public class NPCController : MonoBehaviour {
     /// <param name="radius">>Desired radius of the circle</param>
     public void DrawCircle(Vector3 position, float radius) {
         line.positionCount = 51;
-        line.useWorldSpace = true;
+        line.useWorldSpace = false;
         float x;
         float z;
         float angle = 20f;
@@ -176,7 +182,7 @@ public class NPCController : MonoBehaviour {
             x = Mathf.Sin(Mathf.Deg2Rad * angle) * radius;
             z = Mathf.Cos(Mathf.Deg2Rad * angle) * radius;
 
-            line.SetPosition(i, new Vector3(x, 0, z)+position);
+            line.SetPosition(i, new Vector3(x, 1, z)+position);
             angle += (360f / 51);
         }
     }

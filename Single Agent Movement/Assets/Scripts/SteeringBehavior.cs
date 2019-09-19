@@ -45,7 +45,25 @@ public class SteeringBehavior : MonoBehaviour {
     protected void Start() {
         agent = GetComponent<NPCController>();
         timeToTarget = 3;
+        maxPrediction = 1f;
+        maxRotation = 1f;
         //wanderOrientation = agent.orientation;
+    }
+
+    public float mapToRange(float rotation)
+    {
+        rotation %= 360.0f;
+        if (Mathf.Abs(rotation) > 180.0f)
+        {
+            if(rotation < 0.0f)
+            {
+                rotation += 360.0f;
+            } else
+            {
+                rotation -= 360.0f;
+            }
+        }
+        return rotation;
     }
 
     public Vector3 Seek()
@@ -70,13 +88,71 @@ public class SteeringBehavior : MonoBehaviour {
 
     public Vector3 Persue()
     {
-        return target.position;
+        float prediction = 0;
+        Vector3 predicted_position = target.position;
+
+        // distanve to target
+        Vector3 direction = target.position - agent.position;
+        float distance = direction.sqrMagnitude;
+        
+
+        // find current speed
+        float speed = agent.velocity.sqrMagnitude;
+
+        if (speed <= (distance / maxPrediction)){
+            prediction = maxPrediction;
+        } else
+        {
+            prediction = distance / speed;
+        }
+
+        predicted_position += target.velocity * prediction;
+
+        return predicted_position - agent.position;
     }
 
     public Vector3 Evade()
     {
-        return agent.position;
+        float prediction = 0;
+        Vector3 predicted_position = target.position;
+
+        // distanve to target
+        Vector3 direction = target.position - agent.position;
+        float distance = direction.sqrMagnitude;
+
+
+        // find current speed
+        float speed = agent.velocity.sqrMagnitude;
+
+        if (speed <= (distance / maxPrediction))
+        {
+            prediction = maxPrediction;
+        }
+        else
+        {
+            prediction = distance / speed;
+        }
+
+        predicted_position += target.velocity * prediction;
+
+        return agent.position - predicted_position;
     }
 
-    
+    public float Align()
+    {
+        
+        float rotation = target.orientation - agent.orientation;
+        rotation = mapToRange(rotation);
+        float rotationSize = Mathf.Abs(rotation);
+
+        float targetRotation = maxRotation;
+        targetRotation *= rotation / rotationSize;
+        
+        return targetRotation - agent.rotation;
+ 
+    }
+
+
+
+
 }

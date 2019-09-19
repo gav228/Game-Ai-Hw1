@@ -109,7 +109,10 @@ public class PhaseManager : MonoBehaviour {
                break;
 
            case 3:
-                EnterMapStateThree();
+               EnterMapStateThree();
+               break;
+           case 4:
+               EnterMapStateFour();
                break;
 
             // ADD MORE CASES AS NEEDED
@@ -125,13 +128,26 @@ public class PhaseManager : MonoBehaviour {
 
         narrator.text = "Attempting Seek Algorithm";
 
-        GameObject wolf = SpawnItem(spawner1, WolfPrefab, null, SpawnText2, 0);
-        spawnedNPCs.Add(wolf);
-        spawnedNPCs.Add(SpawnItem(spawner2, HunterPrefab, wolf.GetComponent<NPCController>(), SpawnText1, 0));
+        GameObject Target = Instantiate(WolfPrefab, new Vector3(10, 1, 0), Quaternion.identity);
+        spawnedNPCs.Add(Target);
+        Target.GetComponent<NPCController>().mapState = 20;
 
+        GameObject Seeker1 = Instantiate(HunterPrefab, new Vector3(-10, 1, 0), Quaternion.identity);
+        spawnedNPCs.Add(Seeker1);
+        Seeker1.GetComponent<NPCController>().mapState = 2;
+        Seeker1.GetComponent<SteeringBehavior>().target = Target.GetComponent<NPCController>();
+        Seeker1.GetComponent<NPCController>().label = SpawnText1;
+
+        GameObject Seeker2 = Instantiate(HunterPrefab, new Vector3(-10, 1, -15), Quaternion.identity);
+        spawnedNPCs.Add(Seeker2);
+        Seeker2.GetComponent<NPCController>().mapState = 0;
+        Seeker2.GetComponent<SteeringBehavior>().target = Seeker1.GetComponent<NPCController>();
+        Seeker2.GetComponent<NPCController>().label = SpawnText2;
+       
         previousMapState = 0;
 
-        //spawnedNPCs.Add(SpawnItem(spawner2, WolfPrefab, null, SpawnText2, 4));
+        
+        
     }
 
     private void EnterMapStateOne() {
@@ -142,11 +158,21 @@ public class PhaseManager : MonoBehaviour {
             Destroy(spawnedNPCs[i]);
         }
 
-        GameObject wolf = SpawnItem(spawner2, WolfPrefab, null, SpawnText2, 1);
-        GameObject hunter = SpawnItem(spawner3, HunterPrefab, wolf.GetComponent<NPCController>(), SpawnText1, 0);
-        wolf.GetComponent<SteeringBehavior>().target = hunter.GetComponent<NPCController>();
-        spawnedNPCs.Add(wolf);
-        spawnedNPCs.Add(hunter);
+        GameObject Target = Instantiate(WolfPrefab, new Vector3(10, 1, 10), Quaternion.identity);
+        spawnedNPCs.Add(Target);
+        Target.GetComponent<NPCController>().mapState = 20;
+
+        GameObject Seeker1 = Instantiate(HunterPrefab, new Vector3(-10, 1, 10), Quaternion.identity);
+        spawnedNPCs.Add(Seeker1);
+        Seeker1.GetComponent<NPCController>().mapState = 2;
+        Seeker1.GetComponent<SteeringBehavior>().target = Target.GetComponent<NPCController>();
+        Seeker1.GetComponent<NPCController>().label = SpawnText1;
+
+        GameObject Seeker2 = Instantiate(HunterPrefab, new Vector3(-3, 1, 5), Quaternion.identity);
+        spawnedNPCs.Add(Seeker2);
+        Seeker2.GetComponent<NPCController>().mapState = 1;
+        Seeker2.GetComponent<SteeringBehavior>().target = Seeker1.GetComponent<NPCController>();
+        Seeker2.GetComponent<NPCController>().label = SpawnText2;
 
         previousMapState = 1;
     }
@@ -160,22 +186,76 @@ public class PhaseManager : MonoBehaviour {
             Destroy(spawnedNPCs[i]);
         }
 
-        GameObject wolf = SpawnItem(spawner2, WolfPrefab, null, SpawnText2, 0);
-        GameObject hunter = SpawnItem(spawner3, HunterPrefab, wolf.GetComponent<NPCController>(), SpawnText1, 2);
-        //wolf.GetComponent<SteeringBehavior>().target = hunter.GetComponent<NPCController>();
-        spawnedNPCs.Add(wolf);
-        spawnedNPCs.Add(hunter);
+        GameObject Target = Instantiate(WolfPrefab, new Vector3(10, 1, 10), Quaternion.identity);
+        spawnedNPCs.Add(Target);
+        Target.GetComponent<NPCController>().mapState = 20;
+
+        GameObject Seeker1 = Instantiate(HunterPrefab, new Vector3(-10, 1, 10), Quaternion.identity);
+        spawnedNPCs.Add(Seeker1);
+        Seeker1.GetComponent<NPCController>().mapState = 2;
+        Seeker1.GetComponent<SteeringBehavior>().target = Target.GetComponent<NPCController>();
+        Seeker1.GetComponent<NPCController>().label = SpawnText1;
+
+        GameObject Seeker2 = Instantiate(HunterPrefab, new Vector3(-3, 1, -1), Quaternion.identity);
+        spawnedNPCs.Add(Seeker2);
+        Seeker2.GetComponent<NPCController>().mapState = 3;
+        Seeker2.GetComponent<SteeringBehavior>().target = Seeker1.GetComponent<NPCController>();
+        Seeker2.GetComponent<NPCController>().label = SpawnText2; ;
 
         previousMapState = 2;
 
     }
     private void EnterMapStateThree()
     {
-        narrator.text = "Entering MapState Three";
+        narrator.text = "Attempting Evade";
 
-        //currentMapState = 2; // or whatever. Won't necessarily advance the phase every time
+        for (int i = 0; i < spawnedNPCs.Count; i++)
+        {
+            Destroy(spawnedNPCs[i]);
+        }
 
-        //spawnedNPCs.Add(SpawnItem(spawner2, WolfPrefab, null, SpawnText2, 4));
+        GameObject Target = Instantiate(WolfPrefab, new Vector3(10, 1, 10), Quaternion.identity);
+        spawnedNPCs.Add(Target);
+        Target.GetComponent<NPCController>().mapState = 20;
+
+
+        GameObject Seeker1 = Instantiate(HunterPrefab, new Vector3(-10, 1, 10), Quaternion.identity);
+        spawnedNPCs.Add(Seeker1);
+        Seeker1.GetComponent<NPCController>().mapState = 2;
+        Seeker1.GetComponent<SteeringBehavior>().target = Target.GetComponent<NPCController>();
+        Seeker1.GetComponent<NPCController>().label = SpawnText1;
+
+        GameObject Seeker2 = Instantiate(HunterPrefab, new Vector3(-3, 1, 5), Quaternion.identity);
+        spawnedNPCs.Add(Seeker2);
+        Seeker2.GetComponent<NPCController>().mapState = 4;
+        Seeker2.GetComponent<SteeringBehavior>().target = Seeker1.GetComponent<NPCController>();
+        Seeker2.GetComponent<NPCController>().label = SpawnText2;
+
+        previousMapState = 3;
+    }
+    private void EnterMapStateFour()
+    {
+        narrator.text = "Attempting Align";
+
+        for (int i = 0; i < spawnedNPCs.Count; i++)
+        {
+            Destroy(spawnedNPCs[i]);
+        }
+
+        GameObject Target = Instantiate(WolfPrefab, new Vector3(10, 1, 10), Quaternion.identity);
+        spawnedNPCs.Add(Target);
+        Target.GetComponent<NPCController>().mapState = 20;
+        
+
+
+        GameObject Seeker1 = Instantiate(HunterPrefab, new Vector3(-10, 1, 10), Quaternion.identity);
+        spawnedNPCs.Add(Seeker1);
+        Seeker1.GetComponent<NPCController>().mapState = 5;
+        Seeker1.GetComponent<SteeringBehavior>().target = Target.GetComponent<NPCController>();
+        Seeker1.GetComponent<NPCController>().label = SpawnText1;
+
+
+        previousMapState = 4;
     }
 
 
